@@ -1,1 +1,1 @@
-image:https://github.com/magicsunday/magicsunday/blob/main/github-metrics.svg[Metrics]
+![Metrics](/github-metrics.svg)
