@@ -23,7 +23,7 @@
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
                                 <path fill-rule="evenodd" d="M5.5 3.5a2 2 0 100 4 2 2 0 000-4zM2 5.5a3.5 3.5 0 115.898 2.549 5.507 5.507 0 013.034 4.084.75.75 0 11-1.482.235 4.001 4.001 0 00-7.9 0 .75.75 0 01-1.482-.236A5.507 5.507 0 013.102 8.05 3.49 3.49 0 012 5.5zM11 4a.75.75 0 100 1.5 1.5 1.5 0 01.666 2.844.75.75 0 00-.416.672v.352a.75.75 0 00.574.73c1.2.289 2.162 1.2 2.522 2.372a.75.75 0 101.434-.44 5.01 5.01 0 00-2.56-3.012A3 3 0 0011 4z"/>
                             </svg>
-                            Followed by 17 users
+                            Followed by 18 users
                         </div>
                     </section>
                     <section>
@@ -83,7 +83,7 @@
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
                                 <path fill-rule="evenodd" d="M10.5 7.75a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0zm1.43.75a4.002 4.002 0 01-7.86 0H.75a.75.75 0 110-1.5h3.32a4.001 4.001 0 017.86 0h3.32a.75.75 0 110 1.5h-3.32z"/>
                             </svg>
-                            2048 Commits
+                            2047 Commits
                         </div>
                         <div class="field">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
@@ -2385,6 +2385,11 @@
                                 <path fill="#ebedf0" filter="url(#brightness1)" d="M0,1 1.7,2 1.7,2 0,1 z"/>
                                 <path fill="#ebedf0" filter="url(#brightness2)" d="M1.7,2 3.4,1 3.4,1 1.7,2 z"/>
                             </g>
+                            <g transform="translate(-3.4, 8)">
+                                <path fill="#ebedf0" d="M1.7,2 0,1 1.7,0 3.4,1 z"/>
+                                <path fill="#ebedf0" filter="url(#brightness1)" d="M0,1 1.7,2 1.7,2 0,1 z"/>
+                                <path fill="#ebedf0" filter="url(#brightness2)" d="M1.7,2 3.4,1 3.4,1 1.7,2 z"/>
+                            </g>
                         </g>
                     </g>
                 </svg>
@@ -2394,10 +2399,11 @@
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
                         <path fill-rule="evenodd" d="M5.5 3.5a2 2 0 100 4 2 2 0 000-4zM2 5.5a3.5 3.5 0 115.898 2.549 5.507 5.507 0 013.034 4.084.75.75 0 11-1.482.235 4.001 4.001 0 00-7.9 0 .75.75 0 01-1.482-.236A5.507 5.507 0 013.102 8.05 3.49 3.49 0 012 5.5zM11 4a.75.75 0 100 1.5 1.5 1.5 0 01.666 2.844.75.75 0 00-.416.672v.352a.75.75 0 00.574.73c1.2.289 2.162 1.2 2.522 2.372a.75.75 0 101.434-.44 5.01 5.01 0 00-2.56-3.012A3 3 0 0011 4z"/>
                     </svg>
-                    17 followers
+                    18 followers
                 </h2>
                 <div class="row">
                     <section class="people">
+                        <img class="avatar" src="data:image/jpg;base64,/9j/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAcABwDASIAAhEBAxEB/8QAGAAAAwEBAAAAAAAAAAAAAAAABQYHAwH/xAAtEAABBAEDAwEGBwAAAAAAAAABAgMEEQUABiETMUESByJRYXGBFSRCUpGhwf/EABcBAQEBAQAAAAAAAAAAAAAAAAEDAAL/xAAbEQACAwEBAQAAAAAAAAAAAAAAAQMRIQISBP/aAAwDAQACEQMRAD8A4zjXk5fM5GDMcjZDHziGHALpBIpB+KPfPHw1tL9rK39yYoMyGo7CHW25rKbcA5pzseflxY40Sy+RYlNTGI4ajLcbHVkkAWSaq+91fPNao2Kw+KbhQJ+OxGNE2K3TToaAKD2JB/3WVpYwxvUTPfvtZ21OZRDg5W2gCXAlJQHFeLJHYHxWs8Ll0vY5tWAWyvHdm1X67P6ufrY+2iftU2jM3HJgZGDGimYUrbkdQhF12PPfz/WkgYPcGM/KltlHo8IkpA09QqTbOFL4yh0Xg2YeLcfRkGVrADrgUKsVz9aBvTpsWd+MbdEvG2uJ1VISpTZBWLv1geRzpMkqLu2sc877ziQeT57d9TrI7hy7G98BHh5KZDjSXWkOMxn1toUCvmwDz971H52+ysi8ui372yMJmDASMmOo5LIV0h1DYQQUV8uNLT8+K45ZYfcAFBS2TdfxoTshhEuXkZc25UptxtvrPn1rVweSo8lXz06SH0tuelMePVfs0Puxcfln/9k=" width="28" height="28" alt="" />
                         <img class="avatar" src="data:image/png;base64,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" width="28" height="28" alt="" />
                         <img class="avatar" src="data:image/jpg;base64,/9j/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAcABwDASIAAhEBAxEB/8QAFwAAAwEAAAAAAAAAAAAAAAAABQYHBP/EAC0QAAEDAwMCBQIHAAAAAAAAAAECAwQFESEABhITMQdBUWFxFIEVFiIjkcHR/8QAGAEAAgMAAAAAAAAAAAAAAAAAAwQBAgX/xAAgEQACAQQCAwEAAAAAAAAAAAABAgADBBEhEhMFIjFh/9oADAMBAAIRAxEAPwCRbmlsU5VM5JfdhtXKlcinrOZNr9wBdA7eunDw2qzG5t6tuvyn3AWlqMRIS01e2BYYP31M6rORUZqW5jK0ssqc4tpP6B5A+uSM51v2hWvwx1ynxaaxK6shDrTxaJfaWBbBByM9jcd+19LdZ4/s1GruGLFtZOs7l58VtyQ9kUuEp+jolSp6StKeKUNt47Ei/r5d7HSjSavT9wUaBNEdrr9Lpvp4gcVgn+uJ++gPiHuPcW7V0+h1t/6BAdStmMIp4nHELFhyOeY0vU+BTorS2GqnMQULIcDsMIPPzwV3t851RKS439jVjeVO4gHWIXpGxJu4Ir8mF9MFhw/suOdMm2QO1h5nJHfSrR6pPo+6mlUOSiHMjlSFOGy0Kt3BGQRj4xf30dL0lhuayxMkttuqClpSu1zfSo5Q4qVABTv8j/NHRiwIMDfePahWPtmUeqV+n+I8WNJqL71Mr9NbcKkxGOqJTVrnpi4IWLE2J7Em/oM/L09lanG0PS2JFpDUhpg8HUrSDyGPkH3B0G2TDbjbqpbyFLKm5KCAo3Bz56qe9N21BFTZShuOlIYSAAlXqr31BPA4WHsbJmcsTP/Z" width="28" height="28" alt="" />
                         <img class="avatar" src="data:image/jpg;base64,/9j/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAcABwDASIAAhEBAxEB/8QAGAAAAwEBAAAAAAAAAAAAAAAABQYHAgT/xAAoEAACAQMDBAEFAQEAAAAAAAABAgMEBREAEiEGMUFREwciI2GBcbH/xAAXAQADAQAAAAAAAAAAAAAAAAADBAUC/8QAHBEAAgMBAQEBAAAAAAAAAAAAAQIAAxEEEjET/9oADAMBAAIRAxEAPwAvZemVCiasACjnbjv/ALrEtXfmq5EtVpiEEY3BZVP3r73dgf1z/dPdRAHgki+7DKVyPGR3GkyC9OkwgF3hXZLt2LRFvx8Dkk5znjOc+cedLLWtAxIfnrVthBLnTTWGK4BTE0ij8bEZVvR98jGfOkSqh+edpZcs7ck6JXtlglNPSqzxqxYZGO5LY57jnjQxppc5O9SfGp3ZcbW8j4IrZgbzKB1h1faumkxXVAapZd6QR8uwJ9dsZ88aBWS21/VVBTXqB4rbZ6lJJZw7AmJUkYMN3fBChscAA+tSf6tVMlT9QbkJSCI/jRR6AjU/9J1VesXag+gdpio2MInpVR2TglShdhn9kYPscav/AJhhpm1dk+RIqOtrZcup61YAae3bglK7jOVVQu4+skFv7g6L/GZAHjcOjchlOQdQ6Nyq5B51203UV0pY/ip6po4weFA1O6OBbD7Q5sEw07P/2Q==" width="28" height="28" alt="" />
@@ -2807,7 +2813,7 @@ If I change my custom.scss to something like this:
                                     </defs>
                                     <svg xmlns="http://www.w3.org/2000/svg" class="gauge info">
                                         <circle class="gauge-base" r="25" cx="28" cy="28"/>
-                                        <circle class="gauge-arc" transform="rotate(-90 28 28)" r="25" cx="28" cy="28" stroke-dasharray="31.678986995208753 155"/>
+                                        <circle class="gauge-arc" transform="rotate(-90 28 28)" r="25" cx="28" cy="28" stroke-dasharray="31.763860369609876 155"/>
                                     </svg>
                                     <svg xmlns="http://www.w3.org/2000/svg" mask="url(#mask)">
                                         <g xmlns="http://www.w3.org/2000/svg" transform="translate(5 4)" fill="none" fill-rule="evenodd">
@@ -2980,7 +2986,7 @@ If I change my custom.scss to something like this:
                                 <div class="title">
                                     <span class="prefix"></span>
                                     Developer
-                                    <span class="gh">ranked 3.44m out of 96m users</span>
+                                    <span class="gh">ranked 3.45m out of 96m users</span>
                                 </div>
                                 <div class="text">Published 13 public repositories</div>
                             </div>
@@ -3041,7 +3047,7 @@ If I change my custom.scss to something like this:
                                     </defs>
                                     <svg xmlns="http://www.w3.org/2000/svg" class="gauge info">
                                         <circle class="gauge-base" r="25" cx="28" cy="28"/>
-                                        <circle class="gauge-arc" transform="rotate(-90 28 28)" r="25" cx="28" cy="28" stroke-dasharray="12.462311557788945 155"/>
+                                        <circle class="gauge-arc" transform="rotate(-90 28 28)" r="25" cx="28" cy="28" stroke-dasharray="13.241206030150753 155"/>
                                     </svg>
                                     <svg xmlns="http://www.w3.org/2000/svg" mask="url(#mask)">
                                         <g transform="translate(4 4)" stroke-width="2" fill="none" fill-rule="evenodd">
@@ -3078,9 +3084,9 @@ If I change my custom.scss to something like this:
                                 <div class="title">
                                     <span class="prefix"></span>
                                     Influencer
-                                    <span class="gh">ranked 563k out of 96m users</span>
+                                    <span class="gh">ranked 529k out of 96m users</span>
                                 </div>
-                                <div class="text">Followed by 17 users</div>
+                                <div class="text">Followed by 18 users</div>
                             </div>
                         </div>
                         <div class="achievement c largeable-width-half">
@@ -3116,7 +3122,7 @@ If I change my custom.scss to something like this:
                                 <div class="title">
                                     <span class="prefix"></span>
                                     Maintainer
-                                    <span class="gh">ranked 514k out of 335m repositories</span>
+                                    <span class="gh">ranked 515k out of 335m repositories</span>
                                 </div>
                                 <div class="text">Maintaining a repository with 44 stars</div>
                             </div>
@@ -3264,7 +3270,7 @@ If I change my custom.scss to something like this:
             </section>
             <footer>
                 <span>These metrics do not include all private contributions</span>
-                <span>Last updated 23 Aug 2022, 02:55:36 (timezone Europe/Berlin) with lowlighter/metrics@3.27.0</span>
+                <span>Last updated 24 Aug 2022, 02:48:36 (timezone Europe/Berlin) with lowlighter/metrics@3.27.0</span>
             </footer>
         </div>
         <div xmlns="http://www.w3.org/1999/xhtml" id="metrics-end"></div>
