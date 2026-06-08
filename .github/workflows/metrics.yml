@@ -37,8 +37,10 @@ jobs:
           plugin_languages_sections: most-used
           plugin_languages_threshold: 0%
           plugin_lines: yes
+          # Without an explicit sections value the lines template reads an
+          # undefined `sections` and crashes the whole render.
+          plugin_lines_sections: base
           plugin_notable: yes
-          plugin_notable_indepth: yes
           plugin_notable_repositories: yes
           plugin_stackoverflow: yes
           plugin_stackoverflow_limit: 2
