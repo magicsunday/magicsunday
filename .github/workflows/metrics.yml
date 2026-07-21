@@ -1,50 +1,59 @@
 # Visit https://github.com/lowlighter/metrics/blob/master/action.yml for full reference
 name: Metrics
-on:
-  # Schedule daily updates
-  schedule: [{cron: "0 0 * * *"}]
-  # Lines below let you run workflow manually and on each commit
-  workflow_dispatch:
-  push: {branches: ["master", "main"]}
-jobs:
-  github-metrics:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: lowlighter/metrics@65836723097537a54cd8eb90f61839426b4266b6 # v3.34
-        with:
-          # Your GitHub token
-          token: ${{ secrets.METRICS_TOKEN }}
 
-          # Options
-          user: magicsunday
-          template: classic
-          base: header, activity, community, repositories, metadata
-          config_timezone: Europe/Berlin
-          # Render the card at ~960px in a two-column layout so it fills the
-          # profile width instead of the narrow 480px single column.
-          config_display: large
-          plugin_introduction: yes
-          plugin_introduction_title: yes
-          plugin_isocalendar: yes
-          plugin_isocalendar_duration: full-year
-          plugin_languages: yes
-          plugin_languages_categories: markup, programming
-          plugin_languages_colors: github
-          plugin_languages_limit: 8
-          plugin_languages_recent_categories: markup, programming
-          plugin_languages_recent_days: 14
-          plugin_languages_recent_load: 300
-          plugin_languages_sections: most-used
-          plugin_languages_threshold: 0%
-          # The lines plugin is intentionally omitted: its commit-diff query
-          # fails with an "Unexpected error" and the classic lines.ejs partial
-          # does not guard the error case, so it reads `sections` off the error
-          # object and crashes the entire render.
-          plugin_notable: yes
-          plugin_notable_repositories: yes
-          plugin_stackoverflow: yes
-          plugin_stackoverflow_limit: 2
-          plugin_stackoverflow_lines: 2
-          plugin_stackoverflow_lines_snippet: 2
-          plugin_stackoverflow_sections: answers-top, questions-recent
-          plugin_stackoverflow_user: 1111654
+on:
+    # Schedule daily updates
+    schedule: [{cron: "0 0 * * *"}]
+    # Lines below let you run workflow manually and on each commit
+    workflow_dispatch:
+    push: {branches: ["master", "main"]}
+
+jobs:
+    github-metrics:
+        runs-on: ubuntu-latest
+
+        # The action commits the rendered card itself; `committer_token`
+        # defaults to the workflow token, so this job needs write access to
+        # contents. Everything else stays at the read default.
+        permissions:
+            contents: write
+
+        steps:
+            - uses: lowlighter/metrics@65836723097537a54cd8eb90f61839426b4266b6 # v3.34
+              with:
+                  # Your GitHub token
+                  token: ${{ secrets.METRICS_TOKEN }}
+
+                  # Options
+                  user: magicsunday
+                  template: classic
+                  base: header, activity, community, repositories, metadata
+                  config_timezone: Europe/Berlin
+                  # Render the card at ~960px in a two-column layout so it fills the
+                  # profile width instead of the narrow 480px single column.
+                  config_display: large
+                  plugin_introduction: yes
+                  plugin_introduction_title: yes
+                  plugin_isocalendar: yes
+                  plugin_isocalendar_duration: full-year
+                  plugin_languages: yes
+                  plugin_languages_categories: markup, programming
+                  plugin_languages_colors: github
+                  plugin_languages_limit: 8
+                  plugin_languages_recent_categories: markup, programming
+                  plugin_languages_recent_days: 14
+                  plugin_languages_recent_load: 300
+                  plugin_languages_sections: most-used
+                  plugin_languages_threshold: 0%
+                  # The lines plugin is intentionally omitted: its commit-diff query
+                  # fails with an "Unexpected error" and the classic lines.ejs partial
+                  # does not guard the error case, so it reads `sections` off the error
+                  # object and crashes the entire render.
+                  plugin_notable: yes
+                  plugin_notable_repositories: yes
+                  plugin_stackoverflow: yes
+                  plugin_stackoverflow_limit: 2
+                  plugin_stackoverflow_lines: 2
+                  plugin_stackoverflow_lines_snippet: 2
+                  plugin_stackoverflow_sections: answers-top, questions-recent
+                  plugin_stackoverflow_user: 1111654
