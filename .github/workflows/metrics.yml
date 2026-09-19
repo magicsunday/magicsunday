@@ -21,8 +21,10 @@ jobs:
     github-metrics:
         runs-on: ubuntu-latest
         # A stuck check must not starve every later scheduled run behind the
-        # `cancel-in-progress: false` concurrency group below.
-        timeout-minutes: 30
+        # `cancel-in-progress: false` concurrency group below. Margin above
+        # the render step's observed ~11 minutes, since the required checks
+        # this waits on run inside that same budget.
+        timeout-minutes: 45
 
         # Every privileged call in this job authenticates with
         # secrets.METRICS_TOKEN (a PAT), not GITHUB_TOKEN, so it needs no
@@ -34,9 +36,33 @@ jobs:
             METRICS_BRANCH: metrics
 
         steps:
+            - name: Ensure working branch exists
+              env:
+                  GH_TOKEN: ${{ secrets.METRICS_TOKEN }}
+              run: |
+                  set -euo pipefail
+
+                  # This repo deletes a PR's head branch automatically after
+                  # every merge (delete_branch_on_merge, repo-wide, independent
+                  # of any CLI flag), so METRICS_BRANCH is gone again on every
+                  # cycle after the first successful merge. The metrics action's
+                  # own branch bootstrap does not cover this: in plain `commit`
+                  # output mode (the default, used below) its fallback lookup
+                  # queries committer.branch, which equals committer.head here —
+                  # the same missing ref — so it throws instead of creating one.
+                  # Recreate the branch from main's current tip whenever it is
+                  # absent, before the render step needs it to exist.
+                  if ! gh api "repos/${GITHUB_REPOSITORY}/git/ref/heads/${METRICS_BRANCH}" >/dev/null 2>&1; then
+                      main_sha=$(gh api "repos/${GITHUB_REPOSITORY}/git/ref/heads/main" --jq .object.sha)
+                      gh api "repos/${GITHUB_REPOSITORY}/git/refs" -f ref="refs/heads/${METRICS_BRANCH}" -f sha="${main_sha}" >/dev/null
+                  fi
+
             - uses: lowlighter/metrics@65836723097537a54cd8eb90f61839426b4266b6 # v3.34
               with:
-                  # Your GitHub token
+                  # Your GitHub token. secrets.METRICS_TOKEN must be a classic
+                  # PAT with `repo` scope: this job also uses it for gh pr
+                  # create/checks/merge below, which need pull-request write
+                  # access that a stats-only read token would not carry.
                   token: ${{ secrets.METRICS_TOKEN }}
                   committer_token: ${{ secrets.METRICS_TOKEN }}
                   committer_branch: ${{ env.METRICS_BRANCH }}
@@ -45,7 +71,8 @@ jobs:
                   # Contents API stamps for METRICS_TOKEN's account, which
                   # this workflow cannot see or control (no committer_email
                   # input exists) — verify after the first real run that DCO
-                  # actually passes, and adjust the address here if not.
+                  # actually passes, and adjust the address here if not; see
+                  # GH-4 for that follow-up.
                   committer_message: |-
                       Update GitHub metrics image
 
@@ -93,8 +120,9 @@ jobs:
                   set -euo pipefail
 
                   # Most recent PR (any state) for this head/base pair. The
-                  # branch is never deleted after merge (see the merge step
-                  # below), so a prior cycle's PR is always MERGED, not gone.
+                  # branch is deleted on merge (see the merge step below), so
+                  # a MERGED entry here means the branch has since been
+                  # recreated fresh — this only matters for OPEN/CLOSED below.
                   latest=$(gh pr list --repo "${GITHUB_REPOSITORY}" --head "${METRICS_BRANCH}" --base main \
                       --state all --json number,state --jq 'sort_by(.number) | reverse | .[0] // empty')
 
@@ -111,11 +139,19 @@ jobs:
 
                   if [[ "${state}" == "CLOSED" ]]; then
                       # Closed without merging is a human decision (the render
-                      # was declined) — leave it alone instead of silently
-                      # reopening the same proposal every day.
-                      echo "::notice::PR #${number} for ${METRICS_BRANCH} was closed without merging; skipping this cycle instead of reopening it."
-                      echo "number=" >> "${GITHUB_OUTPUT}"
-                      exit 0
+                      # was declined). But `gh pr list` keeps returning this
+                      # same PR as "latest" forever afterward — nothing ever
+                      # creates a higher-numbered one while it still matches —
+                      # so only actually skip while nothing has rendered since
+                      # the decline; once the branch tip moves past what was
+                      # declined, fall through and propose it again.
+                      declined_sha=$(gh pr view "${number}" --repo "${GITHUB_REPOSITORY}" --json headRefOid --jq .headRefOid)
+                      current_sha=$(gh api "repos/${GITHUB_REPOSITORY}/git/ref/heads/${METRICS_BRANCH}" --jq .object.sha)
+                      if [[ "${declined_sha}" == "${current_sha}" ]]; then
+                          echo "::notice::PR #${number} for ${METRICS_BRANCH} was closed without merging and nothing has rendered since; skipping until new content exists."
+                          echo "number=" >> "${GITHUB_OUTPUT}"
+                          exit 0
+                      fi
                   fi
 
                   set +e
@@ -146,8 +182,20 @@ jobs:
                   PR_NUMBER: ${{ steps.pr.outputs.number }}
               run: |
                   set -euo pipefail
+
+                  # `gh pr checks --required` can report zero checks (and
+                  # return) in the brief window before GitHub has registered
+                  # the pull_request-triggered check runs for a just-opened or
+                  # just-updated PR — wait until at least one is reported
+                  # before watching them through to completion.
+                  for _ in $(seq 1 30); do
+                      [[ -n "$(gh pr checks "${PR_NUMBER}" --repo "${GITHUB_REPOSITORY}" --json name --jq '.[0].name // empty' 2>/dev/null)" ]] && break
+                      sleep 10
+                  done
                   gh pr checks "${PR_NUMBER}" --repo "${GITHUB_REPOSITORY}" --watch --fail-fast --required
-                  # No --delete-branch: the next cycle's committer_branch push
-                  # targets this same branch, and staying merged (not absent)
-                  # keeps the state check above simple.
+
+                  # This repo deletes the head branch automatically after every
+                  # merge (delete_branch_on_merge, repo-wide, independent of
+                  # any CLI flag) — the "Ensure working branch exists" step
+                  # recreates it fresh from main's tip on the next cycle.
                   gh pr merge "${PR_NUMBER}" --repo "${GITHUB_REPOSITORY}" --squash
