@@ -143,10 +143,11 @@ jobs:
               if: steps.pr.outputs.number != ''
               env:
                   GH_TOKEN: ${{ secrets.METRICS_TOKEN }}
+                  PR_NUMBER: ${{ steps.pr.outputs.number }}
               run: |
                   set -euo pipefail
-                  gh pr checks "${{ steps.pr.outputs.number }}" --repo "${GITHUB_REPOSITORY}" --watch --fail-fast --required
+                  gh pr checks "${PR_NUMBER}" --repo "${GITHUB_REPOSITORY}" --watch --fail-fast --required
                   # No --delete-branch: the next cycle's committer_branch push
                   # targets this same branch, and staying merged (not absent)
                   # keeps the state check above simple.
-                  gh pr merge "${{ steps.pr.outputs.number }}" --repo "${GITHUB_REPOSITORY}" --squash
+                  gh pr merge "${PR_NUMBER}" --repo "${GITHUB_REPOSITORY}" --squash
