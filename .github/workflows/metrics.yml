@@ -4,25 +4,52 @@ name: Metrics
 on:
     # Schedule daily updates
     schedule: [{cron: "0 0 * * *"}]
-    # Lines below let you run workflow manually and on each commit
+    # Manual runs only; a `push: {branches: [main]}` trigger was removed
+    # deliberately. This workflow now lands its own commit on `main` via a
+    # merged pull request, so a push trigger on `main` would make every merge
+    # re-fire the workflow against a render that already reflects that merge,
+    # producing another commit and another self-triggered run without end.
     workflow_dispatch:
-    push: {branches: ["master", "main"]}
+
+# One in-flight render/PR/merge cycle at a time; a second cron or manual run
+# must not open a competing pull request against the same working branch.
+concurrency:
+    group: ${{ github.workflow }}
+    cancel-in-progress: false
 
 jobs:
     github-metrics:
         runs-on: ubuntu-latest
+        # A stuck check must not starve every later scheduled run behind the
+        # `cancel-in-progress: false` concurrency group below.
+        timeout-minutes: 30
 
-        # The action commits the rendered card itself; `committer_token`
-        # defaults to the workflow token, so this job needs write access to
-        # contents. Everything else stays at the read default.
+        # Every privileged call in this job authenticates with
+        # secrets.METRICS_TOKEN (a PAT), not GITHUB_TOKEN, so it needs no
+        # elevated permissions of its own.
         permissions:
-            contents: write
+            contents: read
+
+        env:
+            METRICS_BRANCH: metrics
 
         steps:
             - uses: lowlighter/metrics@65836723097537a54cd8eb90f61839426b4266b6 # v3.34
               with:
                   # Your GitHub token
                   token: ${{ secrets.METRICS_TOKEN }}
+                  committer_token: ${{ secrets.METRICS_TOKEN }}
+                  committer_branch: ${{ env.METRICS_BRANCH }}
+                  # The DCO check inspects this commit before merge. The
+                  # trailer must match the actual author/committer email the
+                  # Contents API stamps for METRICS_TOKEN's account, which
+                  # this workflow cannot see or control (no committer_email
+                  # input exists) — verify after the first real run that DCO
+                  # actually passes, and adjust the address here if not.
+                  committer_message: |-
+                      Update GitHub metrics image
+
+                      Signed-off-by: Rico Sonntag <mail@ricosonntag.de>
 
                   # Options
                   user: magicsunday
@@ -57,3 +84,69 @@ jobs:
                   plugin_stackoverflow_lines_snippet: 2
                   plugin_stackoverflow_sections: answers-top, questions-recent
                   plugin_stackoverflow_user: 1111654
+
+            - name: Open pull request
+              id: pr
+              env:
+                  GH_TOKEN: ${{ secrets.METRICS_TOKEN }}
+              run: |
+                  set -euo pipefail
+
+                  # Most recent PR (any state) for this head/base pair. The
+                  # branch is never deleted after merge (see the merge step
+                  # below), so a prior cycle's PR is always MERGED, not gone.
+                  latest=$(gh pr list --repo "${GITHUB_REPOSITORY}" --head "${METRICS_BRANCH}" --base main \
+                      --state all --json number,state --jq 'sort_by(.number) | reverse | .[0] // empty')
+
+                  state="" number=""
+                  if [[ -n "${latest}" ]]; then
+                      state=$(jq -r '.state' <<<"${latest}")
+                      number=$(jq -r '.number' <<<"${latest}")
+                  fi
+
+                  if [[ "${state}" == "OPEN" ]]; then
+                      echo "number=${number}" >> "${GITHUB_OUTPUT}"
+                      exit 0
+                  fi
+
+                  if [[ "${state}" == "CLOSED" ]]; then
+                      # Closed without merging is a human decision (the render
+                      # was declined) — leave it alone instead of silently
+                      # reopening the same proposal every day.
+                      echo "::notice::PR #${number} for ${METRICS_BRANCH} was closed without merging; skipping this cycle instead of reopening it."
+                      echo "number=" >> "${GITHUB_OUTPUT}"
+                      exit 0
+                  fi
+
+                  set +e
+                  out=$(gh pr create --repo "${GITHUB_REPOSITORY}" --head "${METRICS_BRANCH}" --base main \
+                      --title "Update GitHub metrics image" \
+                      --body "Automated refresh of the profile metrics image." 2>&1)
+                  rc=$?
+                  set -e
+
+                  if [[ ${rc} -ne 0 ]]; then
+                      # As observed with gh 2.87.3 (2026-09-19): a re-run with
+                      # no rendered change prints exactly this GraphQL message
+                      # and exits 1. Any other failure (auth, rate limit,
+                      # network) must not be swallowed as if it were that case.
+                      if grep -qF 'No commits between' <<<"${out}"; then
+                          echo "number=" >> "${GITHUB_OUTPUT}"
+                          exit 0
+                      fi
+                      echo "::error::gh pr create failed: ${out}"
+                      exit "${rc}"
+                  fi
+                  echo "number=${out##*/}" >> "${GITHUB_OUTPUT}"
+
+            - name: Wait for required checks and merge
+              if: steps.pr.outputs.number != ''
+              env:
+                  GH_TOKEN: ${{ secrets.METRICS_TOKEN }}
+              run: |
+                  set -euo pipefail
+                  gh pr checks "${{ steps.pr.outputs.number }}" --repo "${GITHUB_REPOSITORY}" --watch --fail-fast --required
+                  # No --delete-branch: the next cycle's committer_branch push
+                  # targets this same branch, and staying merged (not absent)
+                  # keeps the state check above simple.
+                  gh pr merge "${{ steps.pr.outputs.number }}" --repo "${GITHUB_REPOSITORY}" --squash
