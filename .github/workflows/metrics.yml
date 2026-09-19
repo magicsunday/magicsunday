@@ -186,10 +186,13 @@ jobs:
                   # `gh pr checks --required` can report zero checks (and
                   # return) in the brief window before GitHub has registered
                   # the pull_request-triggered check runs for a just-opened or
-                  # just-updated PR — wait until at least one is reported
-                  # before watching them through to completion.
+                  # just-updated PR — wait until at least one REQUIRED check is
+                  # reported before watching them through to completion. The
+                  # probe must filter on --required too, matching the watch
+                  # below: a non-required check can register first and would
+                  # otherwise end this loop before any required one exists.
                   for _ in $(seq 1 30); do
-                      [[ -n "$(gh pr checks "${PR_NUMBER}" --repo "${GITHUB_REPOSITORY}" --json name --jq '.[0].name // empty' 2>/dev/null)" ]] && break
+                      [[ -n "$(gh pr checks "${PR_NUMBER}" --repo "${GITHUB_REPOSITORY}" --required --json name --jq '.[0].name // empty' 2>/dev/null)" ]] && break
                       sleep 10
                   done
                   gh pr checks "${PR_NUMBER}" --repo "${GITHUB_REPOSITORY}" --watch --fail-fast --required
